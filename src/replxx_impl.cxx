@@ -1035,14 +1035,14 @@ void Replxx::ReplxxImpl::refresh_line( HINT_ACTION hintAction_ ) {
 	_prompt.write(numLines>0);
 	_prompt._cursorRowOffset = _prompt._extraLines;
 	// display the input line
-	if ( _hasNewlines ) {
+	if ( ( xEndOfInput == 0 ) && ( yEndOfInput > 0 ) && ! _data.is_empty() && ( _data.back() != '\n' ) ) {
 		_terminal.clear_screen( Terminal::CLEAR_SCREEN::TO_END );
-		_terminal.write32( _display.data(), static_cast<int>( _display.size() ) );
-	} else if ( ( xEndOfInput == 0 ) && ( yEndOfInput > 0 ) && ! _data.is_empty() && ( _data.back() != '\n' ) ) {
 		_terminal.write32( _display.data(), static_cast<int>( _display.size() ) );
 		// we have to generate our own newline on line wrap
 		_terminal.write8( "\n", 1 );
+	} else if ( _hasNewlines ) {
 		_terminal.clear_screen( Terminal::CLEAR_SCREEN::TO_END );
+		_terminal.write32( _display.data(), static_cast<int>( _display.size() ) );
 	} else {
 		_terminal.write32( _display.data(), _displayInputLength );
 		_terminal.clear_screen( Terminal::CLEAR_SCREEN::TO_END );
